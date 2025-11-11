@@ -1,5 +1,6 @@
 import React from "react";
 import { Heart, Calendar, Bell, BarChart3, Users, Droplet } from "lucide-react";
+import Image from "next/image";
 import "./page.css";
 
 export default function App() {
@@ -8,13 +9,24 @@ export default function App() {
       <section className="hero">
         <div className="hero-overlay"></div>
         <div className="hero-content">
-          <div className="hero-brand">
-            <h2 className="hero-title">Liflow</h2>
+          <div className="hero-text">
+            <div className="hero-brand">
+              <h2 className="hero-title">Liflow</h2>
+            </div>
+            <p className="hero-subtitle">
+              La plataforma inteligente que conecta donantes con quienes más lo
+              necesitan
+            </p>
           </div>
-          <p className="hero-subtitle">
-            La plataforma inteligente que conecta donantes con quienes más lo
-            necesitan
-          </p>
+          <div className="hero-image-container">
+            <Image
+              src="/personal.jpg"
+              alt="Medical personal"
+              className="hero-image"
+              width={700}
+              height={500}
+            />
+          </div>
         </div>
       </section>
 
