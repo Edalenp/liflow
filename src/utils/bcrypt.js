@@ -4,12 +4,12 @@ dotenv.config();
 
 const saltRounds = parseInt(process.env.BCRYPT_SALT_ROUNDS || '10');
 
-// Hash a password
+// 🔹 Hashear contraseña
 export async function hashPassword(password) {
-    return await bcrypt.hash(password, saltRounds);
+  return await bcrypt.hash(password, saltRounds);
 }
 
-// Compare a password with a hash
+// 🔹 Comparar contraseña ingresada con la almacenada
 export async function comparePassword(password, hashedPassword) {
-    return await bcrypt.compare(password, hashedPassword);
+  return await bcrypt.compare(password, hashedPassword);
 }

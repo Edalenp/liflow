@@ -1,9 +1,13 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import { poolPromise } from './config/database.js';
+import authRoutes from './routes/auth.routes.js';
 
 dotenv.config();
 const app = express();
+
+// Routes
+app.use('/api/auth', authRoutes);
 
 // Global middlewares
 app.use(express.json()); // Allows to read JSON in requests
