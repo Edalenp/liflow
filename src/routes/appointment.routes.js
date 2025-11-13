@@ -1,8 +1,10 @@
 import express from 'express';
-import { createAppointment } from '../controllers/appointment.controller.js';
+import { createAppointment, getMyAppointments } from '../controllers/appointment.controller.js';
+import { requireAuth } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
-router.post('/', createAppointment);
+router.post('/', requireAuth(['donor']), createAppointment);
+router.get('/me', requireAuth(['donor']), getMyAppointments)
 
 export default router;

@@ -42,3 +42,45 @@ export const createAppointment = async (req, res) => {
     return res.status(500).json({ message: 'Error creating appointment' });
   }
 };
+
+/**
+ * GET /api/appointments/me
+ * Requiere JWT (donor). Devuelve las citas del usuario autenticado.
+ */
+
+export const getMyAppointments = async (req, res) => {
+  try {
+    const user = req.user;
+    if (!user || !user.id) return res.status(401).json({ message: 'Unauthorized' });
+
+    const pool = await poolPromise;
+
+    // Obtain donor_id from users table (if exists)
+    const donorRes = await pool.request()
+      .input('user_id', sql.UniqueIdentifier, user.id)
+      .query('SELECT id FROM donors WHERE user_id = @user_id');
+
+    if (donorRes.recordset.length === 0) {
+      return res.status(404).json({ message: 'Donor profile not found for this user' });
+    }
+
+    const donor_id = donorRes.recordset[0].id;
+
+    // Obtain donor's appointments with campaign details
+    const appts = await pool.request()
+      .input('donor_id', sql.UniqueIdentifier, donor_id)
+      .query(`
+          SELECT a.id, a.slot_datetime, a.status, a.eligibility_checked, a.reminder_scheduled_at,
+               c.id AS campaign_id, c.title AS campaign_title, c.location AS campaign_location     
+          FROM appointments a
+          LEFT JOIN campaigns c ON c.id = a.campaign_id
+          WHERE a.donor_id = @donor_id
+          ORDER BY a.slot_datetime DESC  
+      `);
+
+    return res.status(200).json({ data: appts.recordset });
+  } catch (err) { 
+    console.error('getMyAppointments error:', err);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
