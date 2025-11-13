@@ -1,145 +1,144 @@
-import React from "react";
-import { Heart, Calendar, Bell, BarChart3, Users, Droplet } from "lucide-react";
+"use client";
+
+import { useState } from "react";
+import { Bell, CalendarDays, Droplet, LineChart, Menu, X } from "lucide-react";
 import Image from "next/image";
+import ServiceCard from "./components/ServiceCard";
 import "./page.css";
 
 export default function App() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
+  const closeMenu = () => setIsMenuOpen(false);
+
   return (
     <div className="app">
-      <section className="hero">
-        <div className="hero-overlay"></div>
+      <nav className="nav-bar">
+        <div className="nav-logo">
+          <Droplet size={40} color="#E53935" />
+          <h1 className="nav-title">LiFlow</h1>
+        </div>
+
+        <ul className="nav-links">
+          <li>
+            <a className="nav-link" href="#start">
+              Inicio
+            </a>
+          </li>
+          <li>
+            <a className="nav-link" href="#services">
+              Servicios
+            </a>
+          </li>
+          <li>
+            <a className="nav-link" href="#credits">
+              Créditos
+            </a>
+          </li>
+        </ul>
+
+        <button className="button-session">Iniciar Sesión</button>
+
+        <div className="menu-icon" onClick={toggleMenu}>
+          {isMenuOpen ? (
+            <X size={32} color="#E53935" />
+          ) : (
+            <Menu size={32} color="#2E2E2E" />
+          )}
+        </div>
+      </nav>
+
+      {isMenuOpen && (
+        <div className="menu-modal">
+          <ul className="menu-modal-list">
+            <li>
+              <a href="#start" onClick={closeMenu}>
+                Inicio
+              </a>
+            </li>
+            <li>
+              <a href="#services" onClick={closeMenu}>
+                Servicios
+              </a>
+            </li>
+            <li>
+              <a href="#credits" onClick={closeMenu}>
+                Créditos
+              </a>
+            </li>
+            <li>
+              <a href="#" onClick={closeMenu}>
+                Iniciar Sesión
+              </a>
+            </li>
+          </ul>
+        </div>
+      )}
+
+      <section id="start" className="hero-section">
+        <div className="hero-image-container">
+          <Image
+            className="hero-image"
+            src="/doctors.png"
+            alt="Equipo médico profesional"
+            width={700}
+            height={500}
+            priority
+          />
+        </div>
         <div className="hero-content">
-          <div className="hero-text">
-            <div className="hero-brand">
-              <h2 className="hero-title">Liflow</h2>
-            </div>
-            <p className="hero-subtitle">
-              La plataforma inteligente que conecta donantes con quienes más lo
-              necesitan
-            </p>
-          </div>
-          <div className="hero-image-container">
-            <Image
-              src="/personal.jpg"
-              alt="Medical personal"
-              className="hero-image"
-              width={700}
-              height={500}
-            />
-          </div>
+          <h2 className="hero-title">
+            Cada <span className="highlight">gota</span> cuenta. LiFlow permite
+            que todo fluya más <span className="highlight-medical">fácil</span>
+          </h2>
+          <p className="hero-subtitle">
+            Una plataforma innovadora que conecta de manera eficiente a{" "}
+            <span className="highlight-medical">donantes</span>,{" "}
+            <span className="highlight-medical">profesionales de salud</span> y{" "}
+            <span className="highlight-medical">centros médicos</span>,
+            facilitando la atención oportuna de pacientes en situación crítica
+            de forma rápida y organizada.
+          </p>
         </div>
       </section>
 
-      <main className="main">
-        <div className="container">
-          <section className="intro-section">
-            <h2 className="section-title">
-              Gestión eficiente de donantes de sangre
-            </h2>
-            <p className="intro-text">
-              El Hospital Central transforma el proceso de donación de sangre
-              con Liflow, una aplicación que centraliza información, facilita el
-              seguimiento de donantes y optimiza cada campaña para salvar más
-              vidas.
-            </p>
-          </section>
-
-          <section className="features">
-            <div className="feature-card">
-              <div className="feature-icon">
-                <Heart />
-              </div>
-              <h3 className="feature-title">Para Donantes</h3>
-              <p className="feature-description">
-                Regístrate con tu tipo sanguíneo, consulta tu historial de
-                donaciones y lleva un control de cuándo puedes volver a donar.
-                Mantén un registro digital completo de todas tus contribuciones.
-              </p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-icon">
-                <Calendar />
-              </div>
-              <h3 className="feature-title">Campañas Cercanas</h3>
-              <p className="feature-description">
-                Encuentra jornadas de donación cerca de ti y agenda tu cita de
-                forma sencilla. Recibe toda la información necesaria para
-                prepararte antes de tu donación.
-              </p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-icon">
-                <Bell />
-              </div>
-              <h3 className="feature-title">Alertas y Recordatorios</h3>
-              <p className="feature-description">
-                Recibe notificaciones automáticas cuando tu tipo de sangre sea
-                especialmente necesario en una emergencia. No pierdas contacto
-                con las campañas que más importan.
-              </p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-icon">
-                <BarChart3 />
-              </div>
-              <h3 className="feature-title">Panel de Control</h3>
-              <p className="feature-description">
-                Genera reportes de disponibilidad por tipo de sangre, monitorea
-                inscripciones en cada jornada y planifica campañas de manera más
-                eficiente con datos en tiempo real.
-              </p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-icon">
-                <Users />
-              </div>
-              <h3 className="feature-title">Comunidad de Donantes</h3>
-              <p className="feature-description">
-                Mantén a los donantes habituales motivados y conectados.
-                Fideliza a quienes están dispuestos a donar con frecuencia
-                mediante recordatorios oportunos y reconocimientos.
-              </p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-icon">
-                <Heart />
-              </div>
-              <h3 className="feature-title">Tu Impacto</h3>
-              <p className="feature-description">
-                Visualiza cuántas vidas has ayudado a salvar con tus donaciones.
-                Cada gota cuenta y queremos que conozcas el verdadero alcance de
-                tu generosidad.
-              </p>
-            </div>
-          </section>
-
-          <section className="cta-section">
-            <h2 className="cta-title">Únete a Liflow hoy</h2>
-            <p className="cta-text">
-              Gestión organizada y oportuna para salvar más vidas
-            </p>
-            <button className="btn-primary-large">Comenzar ahora</button>
-          </section>
+      <section id="services" className="services-section">
+        <h1 className="services-title">SERVICIOS</h1>
+        <div className="services-cards">
+          <ServiceCard
+            index={0}
+            icon={<Droplet size={26} color="#fff" />}
+            title="Gestión de Donaciones"
+            text="Registra y consulta tus donaciones, revisa tu tipo sanguíneo y conoce cuándo puedes donar nuevamente."
+          />
+          <ServiceCard
+            index={1}
+            icon={<CalendarDays size={26} color="#fff" />}
+            title="Campañas Cercanas"
+            text="Encuentra campañas activas en tu zona, agenda una cita y recibe confirmaciones en tiempo real."
+          />
+          <ServiceCard
+            index={2}
+            icon={<Bell size={26} color="#fff" />}
+            title="Alertas y Recordatorios"
+            text="Recibe notificaciones automáticas cuando tu tipo de sangre sea requerido o tengas una cita próxima."
+          />
+          <ServiceCard
+            index={3}
+            icon={<LineChart size={26} color="#fff" />}
+            title="Reportes y Seguimiento"
+            text="Los médicos y administradores pueden generar reportes de disponibilidad y donantes inscritos."
+          />
         </div>
-      </main>
+      </section>
 
-      <footer className="footer">
-        <div className="container">
-          <div className="footer-content">
-            <div className="footer-brand">
-              <Droplet className="footer-logo" />
-              <span>Liflow</span>
-            </div>
-            <p className="footer-text">
-              Hospital Central - Salvando vidas a través de la donación
-              organizada
-            </p>
-          </div>
+      <footer id="credits" className="credits-section">
+        <h1>Créditos</h1>
+        <div className="authors">
+          <p>Santiago Quintero Pareja</p>
+          <p>Eduardo Alejandro Negrín Pérez</p>
+          <p>Fabián Camilo Quintero Pareja</p>
         </div>
       </footer>
     </div>
