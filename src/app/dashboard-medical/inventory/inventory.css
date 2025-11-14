@@ -57,6 +57,21 @@
   inset: 0;
 }
 
+.inventory-update {
+  text-align: center;
+  font-size: 1rem;
+  color: #444;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeIn 0.8s forwards ease;
+}
+
+.inventory-update span {
+  font-weight: 600;
+  color: #2e2e2e;
+}
+
+
 /* ---------- ANIMATIONS ---------- */
 @keyframes fadeUp {
   from {
