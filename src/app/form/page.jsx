@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import "./form.css";
@@ -10,6 +11,7 @@ export default function FormPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordMatch, setPasswordMatch] = useState(true);
+  const router = useRouter();
 
   const toggleForm = () => {
     setIsRegister(!isRegister);
@@ -30,6 +32,27 @@ export default function FormPage() {
     const value = e.target.value;
     setConfirmPassword(value);
     setPasswordMatch(value === password);
+  };
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    const email = e.target.email.value.trim().toLowerCase();
+
+    const isMedical = email.includes("med") || email.includes("hospital");
+
+    if (isMedical) {
+      router.push("/dashboard-medical");
+    } else {
+      router.push("/dashboard-donors");
+    }
+  };
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+
+    setTimeout(() => {
+      router.push("/dashboard-donors");
+    }, 500);
   };
 
   const formVariants = {
@@ -68,6 +91,7 @@ export default function FormPage() {
             <motion.form
               key="login-form"
               className="login-form"
+              onSubmit={handleLogin}
               variants={formVariants}
               initial="hidden"
               animate="visible"
@@ -114,6 +138,7 @@ export default function FormPage() {
               animate="visible"
               exit="exit"
               transition={{ duration: 0.4 }}
+              onSubmit={handleRegister}
             >
               <div className="input-group">
                 <label htmlFor="full_name">Nombre completo</label>
