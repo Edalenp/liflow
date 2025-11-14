@@ -1,4 +1,4 @@
-# 📘 E — DEPLOY_GUIDE.md (Deployment Guide)
+# 📘 Deployment Guide
 **Recommended location:** `/docs/DEPLOY_GUIDE.md`
 
 ## Recommended Infrastructure
