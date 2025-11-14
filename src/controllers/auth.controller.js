@@ -2,6 +2,8 @@ import { poolPromise } from '../config/database.js';
 import { hashPassword, comparePassword } from '../utils/bcrypt.js';
 import { generateAccessToken, generateRefreshToken } from '../utils/jwt.js';
 import { v4 as uuidv4 } from 'uuid';
+import jwt from 'jsonwebtoken';
+import { addToBlacklist, isBlacklisted } from '../utils/tokenBlacklist.js';
 
 export const register = async (req, res) => {
   console.log('Register request body:', req.body);
@@ -13,7 +15,7 @@ export const register = async (req, res) => {
   try {
     const pool = await poolPromise;
 
-    // Verificar si el usuario ya existe
+    // Verify if user exists
     const existingUser = await pool
       .request()
       .input('email', email)
@@ -44,6 +46,9 @@ export const register = async (req, res) => {
   }
 };
 
+/**
+ * login - small update: tokens are returned
+ */
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -67,6 +72,7 @@ export const login = async (req, res) => {
     if (!match)
       return res.status(401).json({ message: 'Invalid credentials' });
 
+    // Generate tokens using the helpers
     const accessToken = generateAccessToken({ id: user.id, role: user.role });
     const refreshToken = generateRefreshToken({ id: user.id });
 
@@ -77,6 +83,82 @@ export const login = async (req, res) => {
     });
   } catch (err) {
     console.error('Login error:', err);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
+
+/**
+ * POST /api/auth/refresh
+ * Body: { refreshToken }
+ * Validates refresh token, generates new access + refresh tokens.
+ */
+export const refresh = async (req, res) => {
+  const { refreshToken } = req.body;
+
+  if (!refreshToken) {
+    return res.status(400).json({ message: 'Missing refreshToken' });
+  }
+
+  try {
+    // 1) check blacklist (if invalidated)
+    if (isBlacklisted(refreshToken)) {
+      return res.status(401).json({ message: 'Refresh token invalidated' });
+    }
+
+    // 2) verify refresh token
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+
+    // 3) find user in DB
+    const pool = await poolPromise;
+    const userReq = await pool
+      .request()
+      .input('user_id', decoded.id)
+      .query('SELECT id, email, full_name, role FROM users WHERE id = @user_id');
+
+    if (userReq.recordset.length === 0) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const user = userReq.recordset[0];
+
+    // 4) generate new tokens
+    const newAccessToken = generateAccessToken({ id: user.id, role: user.role });
+    const newRefreshToken = generateRefreshToken({ id: user.id });
+
+    return res.status(200).json({
+      message: 'Tokens refreshed successfully',
+      accessToken: newAccessToken,
+      refreshToken: newRefreshToken
+    });
+  } catch (err) {
+    console.error('Error verifying refresh token:', err);
+    return res.status(401).json({ message: 'Invalid or expired refresh token' });
+  }
+};
+
+/**
+ * POST /api/auth/logout
+ * Body optional: { refreshToken }
+ * We invalidate the received refresh token and the current access token.
+ * It requires that the client send Authorization Bearer or at least the refreshToken.
+ */
+export const logout = async (req, res) => {
+  try {
+    const providedRefreshToken = req.body?.refreshToken;
+    const authHeader = req.headers.authorization;
+    const accessToken = authHeader && authHeader.startsWith('Bearer ')
+      ? authHeader.split(' ')[1]
+      : null;
+
+    // Blacklist the refresh token if provided
+    if (providedRefreshToken) addToBlacklist(providedRefreshToken);
+
+    // Blacklist the access token if provided
+    if (accessToken) addToBlacklist(accessToken);
+
+    return res.status(200).json({ message: 'Logged out successfully' });
+  } catch (err) {
+    console.error('Logout error:', err);
     return res.status(500).json({ message: 'Server error' });
   }
 };
