@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
-import "./inventory.css";
+import "./admin-inventory.css";
 
 export default function InventoryPage() {
   const chartRef = useRef(null);
