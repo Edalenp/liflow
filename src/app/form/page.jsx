@@ -13,6 +13,7 @@ export default function FormPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordMatch, setPasswordMatch] = useState(true);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const birthDateRef = useRef(null);
   const confirmPasswordRef = useRef(null);
@@ -45,7 +46,7 @@ export default function FormPage() {
     const birth = new Date(dateStr);
     const today = new Date();
 
-    if (birth > today && birth.getFullYear() > today.getFullYear()) return true;
+    if (birth > today) return true;
     else return false;
   };
 
@@ -79,9 +80,12 @@ export default function FormPage() {
       pRef.current.textContent = "";
     }
 
+    setShowSuccessModal(true);
+
     setTimeout(() => {
-      router.push("/dashboard-donors");
-    }, 500);
+      setShowSuccessModal(false);
+      toggleForm();
+    }, 2000);
   };
 
   const formVariants = {
@@ -92,6 +96,28 @@ export default function FormPage() {
 
   return (
     <div className="form-container">
+      <AnimatePresence>
+        {showSuccessModal && (
+          <motion.div
+            className="success-modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <motion.div
+              className="success-modal"
+              initial={{ scale: 0.7, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.7, opacity: 0 }}
+              transition={{ duration: 0.25 }}
+            >
+              <div className="success-icon">✔</div>
+              <p className="success-text">Cuenta registrada correctamente</p>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <AnimatePresence mode="wait">
         {!userType && !exitAnimation && (
           <motion.div key="select-card" className="form-card select-card">

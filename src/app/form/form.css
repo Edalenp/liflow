@@ -12,6 +12,36 @@
   padding: 40px 20px;
 }
 
+.success-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.success-modal {
+  background: #ffffff;
+  padding: 35px 45px;
+  border-radius: 14px;
+  text-align: center;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.25);
+}
+
+.success-icon {
+  font-size: 3rem;
+  color: #2e7d32;
+  margin-bottom: 12px;
+}
+
+.success-text {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #2e7d32;
+}
+
 .form-card {
   background-color: #ffffff;
   border-radius: 18px;
@@ -267,6 +297,10 @@
   .form-card {
     padding: 40px 35px;
     max-width: 90%;
+  }
+
+  .success-modal-overlay {
+    padding: 20px;
   }
 
   .form-title {
