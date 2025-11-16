@@ -1,8 +1,8 @@
-/* GENERAL */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
 }
 
 .donations-container {
@@ -11,7 +11,6 @@
   padding: 40px 50px;
 }
 
-/* HEADER */
 .donations-header h2 {
   font-size: 2.3rem;
   font-weight: 700;
@@ -26,7 +25,6 @@
   margin-bottom: 50px;
 }
 
-/* LISTA */
 .donations-list {
   display: flex;
   flex-direction: column;
@@ -49,6 +47,38 @@
   color: #2e2e2e;
 }
 
+.no-donations {
+  background: #ffffff;
+  padding: 40px 32px;
+  border-radius: 18px;
+  box-shadow: 0 10px 28px rgba(0,0,0,0.10);
+  text-align: center;
+  max-width: 650px;
+  margin: 40px auto;
+  animation: fadeInEmpty 0.55s ease-out forwards;
+}
+
+.no-donations-icon {
+  font-size: 3.3rem;
+  margin-bottom: 14px;
+  display: block;
+}
+
+.no-donations h3 {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: #1b1b1b;
+  margin-bottom: 8px;
+}
+
+.no-donations p {
+  font-size: 1.05rem;
+  color: #555;
+  line-height: 1.55;
+}
+
+
+
 .campaign {
   color: #555;
   margin-top: 4px;
@@ -66,9 +96,8 @@
   color: #d32f2f;
 }
 
-/* BUTTON */
 .register-button {
-  background: #c62828;
+  background: #1565C0;
   color: white;
   padding: 12px 26px;
   border: none;
@@ -76,15 +105,14 @@
   cursor: pointer;
   font-weight: 600;
   transition: 0.3s ease;
-  box-shadow: 0 4px 10px rgba(198, 40, 40, 0.3);
+  box-shadow: 0 4px 10px rgba(48, 40, 198, 0.3);
 }
 
 .register-button:hover {
-  background: #b71c1c;
+  background: #0e4482;
   transform: translateY(-3px);
 }
 
-/* MODAL */
 .modal-backdrop {
   position: fixed;
   inset: 0;
@@ -141,7 +169,7 @@ textarea {
 .submit-donation {
   margin-top: 10px;
   padding: 14px;
-  background: #c62828;
+  background: #1565C0;
   color: white;
   border: none;
   border-radius: 10px;
@@ -150,7 +178,7 @@ textarea {
 }
 
 .submit-donation:hover {
-  background: #b71c1c;
+  background: #0e4482;
 }
 
 .close-modal {
@@ -162,7 +190,38 @@ textarea {
   font-weight: 600;
 }
 
-/* ANIMACIÓN */
+.success-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+}
+
+.success-modal {
+  background: #ffffff;
+  padding: 30px 35px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 12px 32px rgba(0,0,0,0.25);
+  max-width: 350px;
+  width: 90%;
+}
+
+.success-check {
+  font-size: 3rem;
+  color: #2e7d32;
+  margin-bottom: 8px;
+}
+
+.success-modal p {
+  color: #2e7d32;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;
@@ -174,7 +233,24 @@ textarea {
   }
 }
 
-/* RESPONSIVE */
+@keyframes fadeInEmpty {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 900px) {
+  .no-donations {
+    font-size: 2rem; 
+    text-align: center;
+  }
+}
+
 @media (max-width: 600px) {
   .donations-container {
     padding: 25px;
@@ -184,6 +260,24 @@ textarea {
     flex-direction: column;
     text-align: center;
     gap: 15px;
+  }
+
+  .no-donations {
+    padding: 30px 24px;
+    border-radius: 14px;
+    margin-top: 20px;
+  }
+
+  .no-donations h3 {
+    font-size: 1.45rem;
+  }
+
+  .no-donations p {
+    font-size: 0.95rem;
+  }
+
+  .no-donations-icon {
+    font-size: 2.8rem;
   }
 
   .register-button {

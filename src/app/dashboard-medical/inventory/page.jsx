@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import Chart from "chart.js/auto";
+import { motion } from "framer-motion";
 import "./inventory.css";
 
 export default function InventoryPage() {
-  const chartRef = useRef(null);
+  const canvasRef = useRef(null);
   const chartInstance = useRef(null);
 
   const [inventoryData, setInventoryData] = useState([]);
@@ -39,11 +40,11 @@ export default function InventoryPage() {
     };
   }, []);
 
-  // Render del gráfico
+  // Chart rendering: usamos getContext para asegurar compatibilidad
   useEffect(() => {
-    if (!inventoryData.length) return;
+    if (!inventoryData.length || !canvasRef.current) return;
 
-    const ctx = chartRef.current;
+    const ctx = canvasRef.current.getContext("2d");
 
     if (chartInstance.current) {
       chartInstance.current.destroy();
@@ -58,12 +59,13 @@ export default function InventoryPage() {
             label: "Unidades disponibles",
             data: inventoryData.map((i) => i.units_available),
             backgroundColor: [
-              "rgba(255, 99, 132, 0.75)",
-              "rgba(54, 162, 235, 0.75)",
-              "rgba(255, 206, 86, 0.75)",
-              "rgba(153, 102, 255, 0.75)",
+              "rgba(21,101,192,0.88)",
+              "rgba(13,71,161,0.88)",
+              "rgba(25,118,210,0.88)",
+              "rgba(66,165,245,0.88)",
             ],
             borderRadius: 12,
+            maxBarThickness: 64,
           },
         ],
       },
@@ -73,17 +75,38 @@ export default function InventoryPage() {
         animation: { duration: 900, easing: "easeOutQuart" },
         plugins: {
           legend: { display: false },
+          tooltip: { enabled: true, mode: "nearest" },
         },
         scales: {
           y: {
+            beginAtZero: true,
             ticks: { stepSize: 1 },
+            title: {
+              display: true,
+              text: "Unidades",
+              font: { size: 13, weight: "600" },
+            },
+          },
+          x: {
+            title: {
+              display: true,
+              text: "Tipo sanguíneo",
+              font: { size: 13, weight: "600" },
+            },
           },
         },
       },
     });
+
+    // cleanup on unmount
+    return () => {
+      if (chartInstance.current) {
+        chartInstance.current.destroy();
+        chartInstance.current = null;
+      }
+    };
   }, [inventoryData]);
 
-  // Formatear fecha en español
   const formatDate = (iso) => {
     if (!iso) return "";
     const date = new Date(iso);
@@ -94,22 +117,74 @@ export default function InventoryPage() {
   };
 
   return (
-    <div className="inventory-page">
-      <h1 className="inventory-title">Inventario de Sangre</h1>
+    <motion.main
+      className="inventory-page"
+      initial={{ opacity: 0, y: 18 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45 }}
+      role="main"
+      aria-labelledby="inv-title"
+    >
+      <div className="inventory-top">
+        <header className="inventory-header">
+          <h1 id="inv-title" tabIndex="0" className="inventory-title">
+            Inventario de Sangre
+          </h1>
 
-      <div className="inventory-grid">
-        <div className="inventory-card">
-          <div className="chart-wrapper">
-            <canvas ref={chartRef} id="inventoryChart"></canvas>
-          </div>
-        </div>
+          <p className="inventory-desc" tabIndex="0">
+            Consulta la disponibilidad actual de unidades sanguíneas del banco
+            de sangre. Esta información se actualiza automáticamente cuando se
+            registran nuevas donaciones.
+          </p>
+        </header>
+
+        <section
+          className="inventory-cards-row"
+          aria-label="Resumen de unidades por tipo"
+        >
+          {inventoryData.map((item) => (
+            <motion.div
+              key={item.blood_type}
+              className="summary-card"
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.3 }}
+              tabIndex="0"
+              role="group"
+              aria-label={`${item.blood_type}: ${item.units_available} unidades disponibles`}
+            >
+              <h2>{item.blood_type}</h2>
+              <p>{item.units_available} unidades</p>
+            </motion.div>
+          ))}
+        </section>
       </div>
 
+      <section className="inventory-grid" aria-label="Gráfica de inventario">
+        <div
+          className="inventory-card"
+          role="region"
+          aria-labelledby="chart-title"
+        >
+          <h2 id="chart-title" className="chart-title" tabIndex="0">
+            Distribución por tipo sanguíneo
+          </h2>
+
+          <div
+            className="chart-wrapper"
+            role="img"
+            aria-label="Gráfica de barras con unidades disponibles por tipo sanguíneo"
+          >
+            <canvas ref={canvasRef} id="inventoryChart" />
+          </div>
+        </div>
+      </section>
+
       {lastUpdated && (
-        <p className="inventory-update">
+        <p className="inventory-update" aria-live="polite">
           Última actualización: <span>{formatDate(lastUpdated)}</span>
         </p>
       )}
-    </div>
+    </motion.main>
   );
 }

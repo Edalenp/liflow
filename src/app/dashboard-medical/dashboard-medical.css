@@ -5,195 +5,198 @@
   font-family: "Poppins", sans-serif;
 }
 
-.dashboard-container {
-  min-height: 100vh;
-  background: #e5e5e5;
-  padding: 40px 50px;
+:root {
+  --blue-main: #1565C0;
+  --blue-dark: #0e4482;
+  --bg-light: #f4f7fb;
+  --text-dark: #1b1b1b;
+  --focus-ring: #1a73e8;
 }
 
-/* ---------- HEADER ---------- */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+.dashboard-container {
+  min-height: 97vh;
+  background: var(--bg-light);
+  padding: 50px 60px;
+  color: var(--text-dark);
+}
 
 .dashboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 80px;
+  margin-bottom: 70px;
   flex-wrap: wrap;
   gap: 20px;
 }
 
 .header-text h2 {
-  font-size: 2.3rem;
-  font-weight: 700;
-  color: #2e2e2e;
-  margin-bottom: 10px;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--text-dark);
 }
 
 .header-text p {
-  max-width: 500px;
-  color: #555;
+  max-width: 540px;
   font-size: 1.15rem;
+  color: #444;
+  line-height: 1.6;
 }
 
 .logout-button {
-  background: #e53935;
+  background: var(--blue-main);
   color: white;
   border: none;
-  padding: 10px 22px;
-  border-radius: 8px;
+  padding: 12px 26px;
+  border-radius: 10px;
   font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
   transition: 0.3s ease;
-  box-shadow: 0 4px 12px rgba(229, 57, 53, 0.2);
+  box-shadow: 0 4px 14px rgba(21, 101, 192, 0.25);
 }
 
 .logout-button:hover {
-  background: #c62828;
+  background: var(--blue-dark);
   transform: translateY(-3px);
 }
 
-/* ---------- GRID ---------- */
+.logout-button:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 3px;
+}
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 35px;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 40px;
   width: 100%;
 }
-
-/* ---------- CARDS ---------- */
 
 .dashboard-card {
   position: relative;
-  width: 100%;
-  height: 350px;
-  border-radius: 16px;
+  height: 360px;
+  border-radius: 18px;
   overflow: hidden;
   cursor: pointer;
-  transition: 0.35s ease;
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
-  animation: fadeInUp 0.7s ease both;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  background: #fff;
+  transition: transform 0.35s ease;
+  outline: none;
 }
 
-.dashboard-card:hover {
-  transform: translateY(-5px);
+.dashboard-card:focus-visible {
+  outline: 3px solid var(--focus-ring);
+  outline-offset: 4px;
 }
 
 .card-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  filter: brightness(60%);
+  filter: brightness(65%);
   transition: 0.4s ease;
 }
 
-.dashboard-card:hover .card-image {
-  filter: brightness(40%);
+.dashboard-card:hover .card-image,
+.dashboard-card:focus-visible .card-image {
+  filter: brightness(45%);
   transform: scale(1.05);
 }
 
 .card-overlay {
   position: absolute;
-  bottom: 20px;
-  left: 25px;
+  bottom: 25px;
+  left: 28px;
+  right: 20px;
   color: white;
-  animation: slideUp 0.8s ease forwards;
 }
 
 .card-overlay h3 {
-  font-size: 1.9rem;
-  margin-bottom: 5px;
+  font-size: 2rem;
+  margin-bottom: 8px;
+  font-weight: 700;
+  text-shadow: 0 3px 10px rgba(0, 0, 0, 0.4);
 }
 
 .card-overlay p {
   font-size: 1.1rem;
-  opacity: 0.9;
+  opacity: 0.95;
+  font-weight: 500;
+  line-height: 1.5;
+  max-width: 85%;
 }
 
-/* ANIMATIONS */
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(25px);
+@media (max-width: 1100px) {
+  .dashboard-container {
+    padding: 40px 45px;
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+
+  .dashboard-card {
+    height: 330px;
   }
 }
-
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(15px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* ---------- RESPONSIVE TABLET ---------- */
 
 @media (max-width: 900px) {
-  .dashboard-container {
-    padding: 30px;
-  }
-
   .header-text h2 {
     font-size: 2rem;
   }
-
   .dashboard-card {
     height: 300px;
   }
-}
-
-/* ---------- RESPONSIVE CELULAR ---------- */
-
-@media (max-width: 600px) {
-  .dashboard-container {
-    padding: 20px;
-  }
-
-  .dashboard-header {
-    flex-direction: column;
-    gap: 10px;
-    text-align: center;
-  }
-
-  .header-text h2 {
+  .card-overlay h3 {
     font-size: 1.8rem;
   }
+}
 
+/* Tablets verticales */
+@media (max-width: 700px) {
+  .dashboard-container {
+    padding: 30px 28px;
+  }
+  .dashboard-header {
+    text-align: center;
+  }
   .header-text p {
-    font-size: 1rem;
-    max-width: 90%;
+    max-width: 95%;
     margin: 0 auto;
   }
+}
 
-  .logout-button {
-    width: 100%;
-    padding: 12px;
-    border-radius: 10px;
-    font-size: 1rem;
-  }
-
+@media (max-width: 600px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
-    gap: 25px;
+    gap: 28px;
   }
-
   .dashboard-card {
-    height: 260px;
+    height: 270px;
   }
-
   .card-overlay h3 {
     font-size: 1.6rem;
   }
-
   .card-overlay p {
-    font-size: 0.95rem;
+    font-size: 1rem;
+  }
+  .logout-button {
+    width: 100%;
+    padding: 14px;
+  }
+}
+
+@media (max-width: 430px) {
+  .dashboard-container {
+    padding: 20px 18px;
+  }
+  .dashboard-card {
+    height: 240px;
+  }
+  .card-overlay h3 {
+    font-size: 1.4rem;
   }
 }

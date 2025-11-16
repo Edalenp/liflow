@@ -50,10 +50,22 @@ export default function FormPage() {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    const email = e.target.email.value.trim().toLowerCase();
+    const email = e.target.email.value
+      .trim()
+      .toLowerCase()
+      .split("@")[1]
+      .split(".")[0];
+    console.log(email);
     const isMedical = email.includes("med") || email.includes("hospital");
+    const isAdmin = email.includes("admin");
 
-    router.push(isMedical ? "/dashboard-medical" : "/dashboard-donors");
+    if (isMedical) {
+      router.push("/dashboard-medical");
+    } else if (isAdmin) {
+      router.push("/dashboard-admin");
+    } else {
+      router.push("/dashboard-donors");
+    }
   };
 
   const handleRegister = (e) => {

@@ -1,112 +1,185 @@
+/* ==============================================================
+   BASE
+================================================================ */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+}
+
+:root {
+  --blue-main: #1565C0;
+  --blue-dark: #0d47a1;
+  --bg-light: #f4f7fb;
+  --text-dark: #1b1b1b;
+  --focus-ring: #1a73e8;
+}
+
+body {
   font-family: "Poppins", sans-serif;
 }
 
+/* ==============================================================
+   PAGE LAYOUT
+   - inventory-top contiene el texto (izq) y las tarjetas (der)
+   - en pantallas pequeñas se apilan
+================================================================ */
 .inventory-page {
-  padding: 40px 50px;
-  background: #e5e5e5;
+  padding: 50px 55px;
+  background: var(--bg-light);
   min-height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr;
-  grid-template-rows: auto 1fr;
-  gap: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+}
+
+/* top area: info + cards */
+.inventory-top {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+  justify-content: space-between;
+  width: 100%;
+}
+
+/* header (texto informativo) */
+.inventory-header {
+  flex: 1 1 60%;
+  min-width: 240px;
 }
 
 .inventory-title {
-  font-size: 2.3rem;
-  font-weight: 700;
-  color: #2e2e2e;
-  animation: fadeIn 0.7s ease;
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--text-dark);
 }
 
-/* ---------- CARD + GRID ---------- */
+.inventory-desc {
+  margin-top: 10px;
+  color: #555;
+  font-size: 1.15rem;
+  line-height: 1.7;
+  max-width: 680px;
+}
 
+/* cards row sits to the right on wide screens */
+.inventory-cards-row {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: flex-end;
+}
+
+/* summary card */
+.summary-card {
+  background: white;
+  padding: 16px 20px;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  min-width: 120px;
+  transition: 0.22s ease;
+}
+
+.summary-card:hover {
+  transform: translateY(-3px);
+}
+
+.summary-card h2 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--blue-main);
+}
+
+.summary-card p {
+  font-size: 0.98rem;
+  margin-top: 6px;
+  color: #444;
+}
+
+/* ==============================================================
+   CHART & CARD
+================================================================ */
 .inventory-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  display: flex;
   justify-content: center;
 }
 
 .inventory-card {
   background: white;
   border-radius: 18px;
-  padding: 25px 30px;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-  animation: fadeUp 0.8s ease;
+  padding: 26px;
   width: 100%;
-  max-width: 900px;
-  margin: auto;
+  max-width: 920px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
 }
 
-/* ---------- CHART-WRAPPER ---------- */
+.chart-title {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin-bottom: 12px;
+}
 
+/* chart wrapper: canvas now fills naturally */
 .chart-wrapper {
-  position: relative;
   width: 100%;
-  /* Relación de aspecto 16:9 */
   aspect-ratio: 16 / 9;
+  position: relative;
 }
 
 .chart-wrapper canvas {
-  position: absolute;
   width: 100% !important;
   height: 100% !important;
-  inset: 0;
+  display: block;
 }
 
+/* ==============================================================
+   LAST UPDATED
+================================================================ */
 .inventory-update {
   text-align: center;
   font-size: 1rem;
-  color: #444;
-  margin-bottom: 20px;
-  opacity: 0;
-  animation: fadeIn 0.8s forwards ease;
+  color: #555;
 }
 
 .inventory-update span {
-  font-weight: 600;
-  color: #2e2e2e;
+  font-weight: 700;
+  color: var(--text-dark);
 }
 
-
-/* ---------- ANIMATIONS ---------- */
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(25px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@media (max-width: 900px) {
+/* ==============================================================
+   RESPONSIVE BEHAVIOR
+================================================================ */
+@media (max-width: 1100px) {
   .inventory-page {
-    padding: 30px;
+    padding: 36px;
+  }
+  .inventory-cards-row {
+    flex: 0 0 280px;
+  }
+  .chart-title { font-size: 1.35rem; }
+}
+
+@media (max-width: 860px) {
+  /* apila las tarjetas debajo del texto */
+  .inventory-top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 18px;
   }
 
-  .inventory-card {
-    padding: 20px;
+  .inventory-header {
+    order: 1;
   }
 
-  .inventory-title {
-    font-size: 2rem;
+  .inventory-cards-row {
+    order: 2;
+    flex: 1 1 100%;
+    justify-content: flex-start;
   }
+
+  .summary-card { min-width: 140px; }
 }
 
 @media (max-width: 600px) {
@@ -115,27 +188,26 @@
   }
 
   .inventory-title {
-    text-align: center;
-  }
-}
-
-@media (max-width: 480px) {
-  .inventory-page {
-    padding: 15px;
+    font-size: 1.9rem;
+    text-align: left;
   }
 
-  .inventory-title {
-    font-size: 1.6rem;
-    margin-bottom: 20px;
+  .inventory-desc {
+    font-size: 1rem;
   }
 
   .inventory-card {
-    padding: 14px;
-    border-radius: 14px;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+    padding: 18px;
+    border-radius: 12px;
   }
 
   .chart-wrapper {
     aspect-ratio: 16 / 10;
   }
+}
+
+@media (max-width: 420px) {
+  .inventory-title { font-size: 1.6rem; text-align: center; }
+  .inventory-desc { text-align: center; }
+  .summary-card { width: 100%; }
 }
