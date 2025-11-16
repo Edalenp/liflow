@@ -182,6 +182,7 @@ export default function FormPage() {
                       id="email"
                       placeholder="ejemplo@correo.com"
                       required
+                      autoComplete="true"
                     />
                   </div>
 
@@ -233,6 +234,7 @@ export default function FormPage() {
                       id="full_name"
                       placeholder="Juan Pérez"
                       required
+                      autoComplete="off"
                     />
                   </div>
 
@@ -243,6 +245,7 @@ export default function FormPage() {
                       id="email"
                       placeholder="juan@example.com"
                       required
+                      autoComplete="off"
                     />
                   </div>
 
@@ -255,6 +258,7 @@ export default function FormPage() {
                       onChange={handlePasswordChange}
                       placeholder="P@ssw0rd123"
                       required
+                      autoComplete="off"
                     />
                   </div>
 
@@ -270,6 +274,7 @@ export default function FormPage() {
                       onChange={handleConfirmChange}
                       placeholder="Repite tu contraseña"
                       required
+                      autoComplete="off"
                       className={!passwordMatch ? "error" : ""}
                     />
                     {!passwordMatch && (
@@ -296,6 +301,7 @@ export default function FormPage() {
                       id="document_number"
                       placeholder="1029384756"
                       required
+                      autoComplete="off"
                     />
                   </div>
 
@@ -305,6 +311,7 @@ export default function FormPage() {
                       type="date"
                       id="birth_date"
                       required
+                      autoComplete="off"
                       ref={birthDateRef}
                     />
 
@@ -317,6 +324,7 @@ export default function FormPage() {
                       type="tel"
                       id="phone"
                       placeholder="3001234567"
+                      autoComplete="off"
                       required
                     />
                   </div>
