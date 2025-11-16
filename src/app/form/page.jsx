@@ -45,9 +45,7 @@ export default function FormPage() {
   const validateBirthDate = (dateStr) => {
     const birth = new Date(dateStr);
     const today = new Date();
-
-    if (birth > today) return true;
-    else return false;
+    return birth > today;
   };
 
   const handleLogin = (e) => {
@@ -55,11 +53,7 @@ export default function FormPage() {
     const email = e.target.email.value.trim().toLowerCase();
     const isMedical = email.includes("med") || email.includes("hospital");
 
-    if (isMedical) {
-      router.push("/dashboard-medical");
-    } else {
-      router.push("/dashboard-donors");
-    }
+    router.push(isMedical ? "/dashboard-medical" : "/dashboard-donors");
   };
 
   const handleRegister = (e) => {
@@ -120,7 +114,14 @@ export default function FormPage() {
 
       <AnimatePresence mode="wait">
         {!userType && !exitAnimation && (
-          <motion.div key="select-card" className="form-card select-card">
+          <motion.div
+            key="select-card"
+            className="form-card select-card"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={true}
+            transition={{ duration: 0.4, ease: "easeOut" }}
+          >
             <h1 className="form-title">Elige tu tipo de acceso</h1>
             <p className="form-subtitle">
               Selecciona cómo deseas ingresar a BloodFlow.
@@ -129,6 +130,7 @@ export default function FormPage() {
             <button
               className="select-button donor"
               onClick={() => setUserType("donor")}
+              aria-label="Ingresar como donante"
             >
               Donante
             </button>
@@ -136,11 +138,12 @@ export default function FormPage() {
             <button
               className="select-button staff"
               onClick={() => setUserType("staff")}
+              aria-label="Ingresar como personal médico"
             >
               Personal Médico
             </button>
 
-            <Link href="/" className="back-home">
+            <Link href="/" className="back-home" aria-label="Volver al inicio">
               Volver al inicio
             </Link>
           </motion.div>
@@ -154,6 +157,7 @@ export default function FormPage() {
             className={`form-card ${
               userType === "staff" ? "staff-mode" : "donor-mode"
             }`}
+            role="form"
             initial={{ opacity: 0, y: 35 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40 }}
@@ -169,20 +173,23 @@ export default function FormPage() {
                   key="login-form"
                   className="login-form"
                   onSubmit={handleLogin}
+                  aria-label="Formulario de inicio de sesión"
                   variants={formVariants}
                   initial="hidden"
                   animate="visible"
                   exit="exit"
-                  transition={{ duration: 0.4 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
                 >
                   <div className="input-group">
                     <label htmlFor="email">Correo electrónico</label>
                     <input
                       type="email"
                       id="email"
+                      name="email"
+                      aria-required="true"
+                      autoComplete="email"
+                      aria-label="Correo electrónico"
                       placeholder="ejemplo@correo.com"
-                      required
-                      autoComplete="true"
                     />
                   </div>
 
@@ -191,8 +198,11 @@ export default function FormPage() {
                     <input
                       type="password"
                       id="password"
-                      placeholder="••••••••"
+                      name="password"
                       required
+                      aria-required="true"
+                      aria-label="Contraseña"
+                      placeholder="••••••••"
                     />
                   </div>
 
@@ -203,6 +213,7 @@ export default function FormPage() {
                         ? "form-button"
                         : "form-button-medical"
                     }
+                    aria-label="Ingresar"
                   >
                     Ingresar
                   </button>
@@ -210,7 +221,11 @@ export default function FormPage() {
                   {userType === "staff" ? null : (
                     <p className="form-footer">
                       ¿No tienes una cuenta?{" "}
-                      <span className="register-link" onClick={toggleForm}>
+                      <span
+                        className="register-link"
+                        onClick={toggleForm}
+                        aria-label="Registrarse"
+                      >
                         Regístrate
                       </span>
                     </p>
@@ -220,21 +235,23 @@ export default function FormPage() {
                 <motion.form
                   key="register-form"
                   className="register-form"
+                  onSubmit={handleRegister}
+                  aria-label="Formulario de registro"
                   variants={formVariants}
                   initial="hidden"
                   animate="visible"
                   exit="exit"
                   transition={{ duration: 0.4 }}
-                  onSubmit={handleRegister}
                 >
                   <div className="input-group">
                     <label htmlFor="full_name">Nombre completo</label>
                     <input
                       type="text"
                       id="full_name"
-                      placeholder="Juan Pérez"
                       required
-                      autoComplete="off"
+                      autoComplete="name"
+                      aria-required="true"
+                      placeholder="Juan Pérez"
                     />
                   </div>
 
@@ -243,9 +260,10 @@ export default function FormPage() {
                     <input
                       type="email"
                       id="email"
-                      placeholder="juan@example.com"
                       required
-                      autoComplete="off"
+                      autoComplete="email"
+                      aria-required="true"
+                      placeholder="juan@gmail.com"
                     />
                   </div>
 
@@ -256,9 +274,10 @@ export default function FormPage() {
                       id="password"
                       value={password}
                       onChange={handlePasswordChange}
-                      placeholder="P@ssw0rd123"
                       required
-                      autoComplete="off"
+                      aria-required="true"
+                      aria-invalid={!passwordMatch}
+                      placeholder="P@ssw0rd123"
                     />
                   </div>
 
@@ -267,15 +286,16 @@ export default function FormPage() {
                       Confirmar contraseña
                     </label>
                     <input
+                      className={!passwordMatch ? "error" : ""}
                       type="password"
                       id="confirm_password"
                       value={confirmPassword}
                       ref={confirmPasswordRef}
                       onChange={handleConfirmChange}
-                      placeholder="Repite tu contraseña"
                       required
-                      autoComplete="off"
-                      className={!passwordMatch ? "error" : ""}
+                      aria-required="true"
+                      aria-invalid={!passwordMatch}
+                      placeholder="Repite tu contraseña"
                     />
                     {!passwordMatch && (
                       <p className="error-text">
@@ -286,7 +306,7 @@ export default function FormPage() {
 
                   <div className="input-group">
                     <label htmlFor="document_type">Tipo de documento</label>
-                    <select id="document_type" required>
+                    <select id="document_type" required aria-required="true">
                       <option value="">Seleccione</option>
                       <option value="CC">Cédula de ciudadanía</option>
                       <option value="TI">Tarjeta de identidad</option>
@@ -299,9 +319,9 @@ export default function FormPage() {
                     <input
                       type="text"
                       id="document_number"
-                      placeholder="1029384756"
                       required
-                      autoComplete="off"
+                      aria-required="true"
+                      placeholder="1029384756"
                     />
                   </div>
 
@@ -311,7 +331,7 @@ export default function FormPage() {
                       type="date"
                       id="birth_date"
                       required
-                      autoComplete="off"
+                      aria-required="true"
                       ref={birthDateRef}
                     />
 
@@ -323,15 +343,16 @@ export default function FormPage() {
                     <input
                       type="tel"
                       id="phone"
-                      placeholder="3001234567"
-                      autoComplete="off"
                       required
+                      autoComplete="phone"
+                      aria-required="true"
+                      placeholder="3001234567"
                     />
                   </div>
 
                   <div className="input-group">
                     <label htmlFor="blood_type">Tipo de sangre</label>
-                    <select id="blood_type" required>
+                    <select id="blood_type" required aria-required="true">
                       <option value="">Seleccione</option>
                       <option value="O+">O+</option>
                       <option value="O-">O-</option>
@@ -350,7 +371,11 @@ export default function FormPage() {
 
                   <p className="form-footer">
                     ¿Ya tienes una cuenta?{" "}
-                    <span className="register-link" onClick={toggleForm}>
+                    <span
+                      className="register-link"
+                      onClick={toggleForm}
+                      aria-label="Iniciar sesión"
+                    >
                       Inicia sesión
                     </span>
                   </p>
@@ -372,8 +397,12 @@ export default function FormPage() {
                   setExitAnimation(false);
                 }, 350);
               }}
+              aria-label="Volver a seleccionar el rol"
             >
-              <span className="arrow-icon">←</span> Escoger nuevamente el rol
+              <span className="arrow-icon" aria-hidden="true">
+                ←
+              </span>{" "}
+              Escoger nuevamente el rol
             </button>
           </motion.div>
         )}

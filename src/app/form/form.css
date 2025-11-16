@@ -3,6 +3,14 @@
   font-family: "Poppins", sans-serif;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 .form-container {
   min-height: 89vh;
   background: linear-gradient(135deg, #ffffff 40%, #f8f9fa 100%);
@@ -81,7 +89,7 @@
 }
 
 .select-button.donor {
-  background: #E53935;
+  background: #C62828;
   color: #fff;
   box-shadow: 0 6px 20px rgba(229,57,53,0.25);
 }
