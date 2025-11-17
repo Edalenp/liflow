@@ -1,5 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import { poolPromise } from './config/database.js';
 import authRoutes from './routes/auth.routes.js';
 import campaignRoutes from './routes/campaign.routes.js';
@@ -11,6 +12,16 @@ import notificationRoutes from './routes/notification.routes.js';
 
 dotenv.config();
 const app = express();
+
+// Cors configuration
+app.use(cors({
+  origin: "http://localhost:3000",           // Local Frontend
+  methods: "GET,POST,PUT,DELETE,OPTIONS",
+  allowedHeaders: "Content-Type,Authorization",
+  credentials: true
+}));
+
+app.options("*", cors());
 
 // Global middlewares
 app.use(express.json()); // Allows to read JSON in requests
