@@ -1,3 +1,3 @@
-# LIFLOW
+# BLOODFLOW
 
 A blood donation management application that allows you to organize campaigns, register donors, and manage appointments digitally. Users can register, check available days, and schedule their appointments, while medical staff validate eligibility, record donations, and manage the blood inventory. The system automates notifications, reports, and stock control to improve efficiency and save more lives.
