@@ -136,3 +136,38 @@ export const getPendingDonations = async (req, res) => {
     return res.status(500).json({ message: 'Server error' });
   }
 };
+
+/**
+GET /api/appointments/pending-checks
+Devuelve TODAS las citas pendientes de evaluación médica
+Requiere role: medical_staff
+*/
+export const getPendingChecks = async (req, res) => {
+  try {
+    const user = req.user;
+    if (!user || user.role !== 'medical_staff') {
+      return res.status(403).json({ message: 'Insufficient permissions' });
+    }
+    const pool = await poolPromise;
+    const appts = await pool.request()
+      .query(`
+        SELECT 
+          a.id,
+          a.slot_datetime as datetime,
+          a.status,
+          u.full_name as donor,
+          c.title as campaign
+        FROM appointments a
+        INNER JOIN donors d ON a.donor_id = d.id
+        INNER JOIN users u ON d.user_id = u.id
+        INNER JOIN campaigns c ON a.campaign_id = c.id
+        WHERE a.eligibility_checked = 0
+          AND a.status = 'scheduled'
+        ORDER BY a.slot_datetime ASC
+      `);
+    return res.status(200).json(appts.recordset);
+  } catch (err) {
+    console.error('getPendingChecks error:', err);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
