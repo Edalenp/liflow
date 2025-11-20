@@ -14,7 +14,7 @@ A blood donation management application that allows you to organize campaigns, r
 
 # WEB
 
-Enter the following link: https://bloodflow.vercel.app/
+Enter the following link: https://bloodflow.vercel.app/.
 
 NOTE: To connect the backend with the frontend, we need a environment variable in the configuration
 of Vercel. The one we used was named "NEXT_PUBLIC_BACKEND" with the value "https://backend-blf-production.up.railway.app".
