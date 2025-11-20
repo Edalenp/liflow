@@ -4,8 +4,9 @@ import { requireAuth } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
-router.post('/', requireAuth(['donor']), createAppointment);
-router.get('/me', requireAuth(['donor']), getMyAppointments)
 router.get('/pending-donations', requireAuth(['medical_staff']), getPendingDonations);
+router.post('/', requireAuth(['donor']), createAppointment);
+router.get('/me', requireAuth(['donor']), getMyAppointments);
+
 
 export default router;
